@@ -1,0 +1,62 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "amplify-amplifypoc-android-153117-authRole",
+			"UnauthRoleArn": "arn:aws:iam::940639120288:role/amplify-amplifypoc-android-153117-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::940639120288:role/amplify-amplifypoc-android-153117-authRole",
+			"Region": "ap-south-1",
+			"DeploymentBucketName": "amplify-amplifypoc-android-153117-deployment",
+			"UnauthRoleName": "amplify-amplifypoc-android-153117-unauthRole",
+			"StackName": "amplify-amplifypoc-android-153117",
+			"StackId": "arn:aws:cloudformation:ap-south-1:940639120288:stack/amplify-amplifypoc-android-153117/794df980-47fe-11ea-adef-027feff0383e",
+			"AmplifyAppId": "d5jfhbgcax2i2"
+		}
+	},
+	"auth": {
+		"amplifypoc4fd5bb4a": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifypoc-android-153117-deployment/amplify-cfn-templates/auth/amplifypoc4fd5bb4a-cloudformation-template.yml",
+				"logicalId": "authamplifypoc4fd5bb4a"
+			},
+			"lastPushTimeStamp": "2020-02-05T10:31:03.695Z",
+			"output": {
+				"AppClientSecret": "1h2rphhc9220rs3guntckt95j5nambc5ucjo514qku8h55io5q0k",
+				"UserPoolId": "ap-south-1_jPuSYPZpy",
+				"AppClientIDWeb": "5cvhe3anaeniqc9477pf2qmqel",
+				"AppClientID": "3j65tde8j4qfb2oivn0aeiqdnm",
+				"IdentityPoolId": "ap-south-1:6acf56f4-9c64-47ad-89d1-d35f973c32ac",
+				"IdentityPoolName": "amplifypoc4fd5bb4a_identitypool_4fd5bb4a__android",
+				"UserPoolName": "amplifypoc4fd5bb4a_userpool_4fd5bb4a"
+			},
+			"lastPushDirHash": "ElJmQZtoPo3DXtI29ApWJMGOAeE="
+		}
+	},
+	"api": {
+		"AmplifyAndroid": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authamplifypoc4fd5bb4a"
+						}
+					}
+				},
+				"GraphQLAPIIdOutput": "wbqytflgxve7lfx4cwdopmz47e",
+				"GraphQLAPIEndpointOutput": "https://3frqinqtmbh2vdgy67doqwc34u.appsync-api.ap-south-1.amazonaws.com/graphql"
+			},
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifypoc-android-153117-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apiAmplifyAndroid"
+			},
+			"lastPushTimeStamp": "2020-02-05T10:31:03.695Z",
+			"lastPushDirHash": "OIzTbrej6wwbPlAXeBccCL2IwWA="
+		}
+	}
+}

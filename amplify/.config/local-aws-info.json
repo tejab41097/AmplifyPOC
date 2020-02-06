@@ -1,0 +1,7 @@
+{
+    "android": {
+        "configLevel": "project",
+        "useProfile": true,
+        "profileName": "tejas"
+    }
+}
