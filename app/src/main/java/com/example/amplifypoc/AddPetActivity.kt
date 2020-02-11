@@ -1,5 +1,7 @@
 package com.example.amplifypoc
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,10 +9,18 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.amazonaws.amplify.generated.graphql.CreatePetMutation
+import com.amazonaws.amplify.generated.graphql.CreatePetMutation.CreatePet
+import com.amazonaws.amplify.generated.graphql.ListPetsQuery
+import com.amazonaws.amplify.generated.graphql.ListPetsQuery.ListPets
+import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers
 import com.apollographql.apollo.GraphQLCall
+import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import com.example.amplifypoc.ClientFactory.appSyncClient
 import type.CreatePetInput
+import java.util.*
 import javax.annotation.Nonnull
+import kotlin.collections.ArrayList
 
 
 class AddPetActivity : AppCompatActivity() {
@@ -18,13 +28,6 @@ class AddPetActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_pet)
-//        val btnAddItem: Button = findViewById(R.id.btn_save)
-
-//        btnAddItem.setOnClickListener(object : View.OnClickListener {
-//            override fun onClick(view: View?) {
-//                save()
-//            }
-//        })
     }
 
     fun savePet(view: View) {
@@ -42,7 +45,74 @@ class AddPetActivity : AppCompatActivity() {
         val addPetMutation = CreatePetMutation.builder()
             .input(input)
             .build()
-        ClientFactory.appSyncClient()!!.mutate(addPetMutation).enqueue(mutateCallback)
+        appSyncClient()!!.mutate(addPetMutation).enqueue(mutateCallback)
+        appSyncClient()!!.mutate(addPetMutation).
+            refetchQueries(ListPetsQuery.builder().build()).
+            enqueue(mutateCallback)
+        addPetOffline(input)
+    }
+
+    private fun addPetOffline(input: CreatePetInput) {
+        val expected = CreatePet(
+            "Pet",
+            UUID.randomUUID().toString(),
+            input.name(),
+            input.description()
+        )
+        val awsAppSyncClient = appSyncClient()
+        val listEventsQuery = ListPetsQuery.builder().build()
+        awsAppSyncClient!!.query(
+            listEventsQuery
+        )
+            .responseFetcher(AppSyncResponseFetchers.CACHE_ONLY)
+            .enqueue(object : GraphQLCall.Callback<ListPetsQuery.Data?>() {
+                override fun onResponse(@Nonnull response: Response<ListPetsQuery.Data?>) {
+                    val items: MutableList<ListPetsQuery.Item> = ArrayList()
+                    if (response.data() != null) {
+                        items.addAll(response.data()!!.listPets()!!.items()!!)
+                    }
+                    items.add(
+                        ListPetsQuery.Item(
+                            expected.__typename(),
+                            expected.id(),
+                            expected.name(),
+                            expected.description()
+                        )
+                    )
+                    val data =
+                        ListPetsQuery.Data(ListPets("ModelPetConnection", items, null))
+                    awsAppSyncClient.store
+                        .write(
+                            listEventsQuery,
+                            data
+                        ).enqueue(null)
+                    Log.d(
+                        "TAG",
+                        "Successfully wrote item to local store while being offline."
+                    )
+                    finishIfOffline()
+                }
+
+                override fun onFailure(@Nonnull e: ApolloException) {
+                    Log.e(
+                        "TAG",
+                        "Failed to update event query list.",
+                        e
+                    )
+                }
+            })
+    }
+
+    private fun finishIfOffline() { // Close the add activity when offline otherwise allow callback to close
+        val cm =
+            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = cm.activeNetworkInfo
+        val isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting
+        if (!isConnected) {
+            Log.d("TAG", "App is offline. Returning to MainActivity .")
+            finish()
+        }
     }
 
     // Mutation callback code
