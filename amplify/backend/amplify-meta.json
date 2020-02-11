@@ -31,7 +31,7 @@
                 "IdentityPoolName": "amplifypoc4fd5bb4a_identitypool_4fd5bb4a__android",
                 "UserPoolName": "amplifypoc4fd5bb4a_userpool_4fd5bb4a"
             },
-          "lastPushTimeStamp": "2020-02-06T11:43:26.878Z",
+            "lastPushTimeStamp": "2020-02-06T05:47:30.711Z",
             "providerMetadata": {
                 "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifypoc-android-153117-deployment/amplify-cfn-templates/auth/amplifypoc4fd5bb4a-cloudformation-template.yml",
                 "logicalId": "authamplifypoc4fd5bb4a"
@@ -55,7 +55,7 @@
                 "GraphQLAPIIdOutput": "wbqytflgxve7lfx4cwdopmz47e",
                 "GraphQLAPIEndpointOutput": "https://3frqinqtmbh2vdgy67doqwc34u.appsync-api.ap-south-1.amazonaws.com/graphql"
             },
-          "lastPushTimeStamp": "2020-02-06T11:43:26.879Z",
+            "lastPushTimeStamp": "2020-02-06T05:47:30.714Z",
             "providerMetadata": {
                 "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifypoc-android-153117-deployment/amplify-cfn-templates/api/cloudformation-template.json",
                 "logicalId": "apiAmplifyAndroid"
